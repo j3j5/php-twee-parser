@@ -16,6 +16,7 @@ namespace j3j5;
 class TweePassage {
 
 	private $log;
+	private $raw_links;
 
 	public $title;
 	public $text;
@@ -43,13 +44,19 @@ class TweePassage {
 	}
 
 	private function parse_passage($passage) {
-		$this->title	= $passage['title'];
-		$this->text		= $passage['text'];
-		$this->modifier	= $passage['modifier'];
-		$this->tags		= $passage['tags'];
-		$this->created	= $passage['created'];
-		$this->modified	= $passage['modified'];
+		$this->title		= $passage['title'];
+		$this->modifier		= $passage['modifier'];
+		$this->tags			= $passage['tags'];
+		$this->created		= $passage['created'];
+		$this->modified		= $passage['modified'];
+		$this->links		= array();
+		$this->raw_links	= array();
 		$this->parse_links($passage['text']);
+		// Clean up links from the text
+		foreach($this->raw_links AS $link) {
+			$passage['text'] = str_replace($link, '', $passage['text']);
+		}
+		$this->text		= $passage['text'];
 	}
 
 	private function parse_links($text) {
@@ -60,10 +67,12 @@ class TweePassage {
 			switch($matches[2]) {
 				case '->':
 					$this->links[] = array('text' => $matches[1], 'link' => $matches[3]);
+					$this->raw_links[] = $matches[0];
 					break;
 				case '<-':
 				case '|':
 					$this->links[] = array('text' => $matches[3], 'link' => $matches[1]);
+					$this->raw_links[] = $matches[0];
 					break;
 				default:
 					$this->log->addWarning("Something that looked like a link could not be parsed.");

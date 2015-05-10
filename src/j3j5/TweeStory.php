@@ -5,6 +5,9 @@
  *
  * A parser for JSON Twee files to create a meaningful object oriented approach.
  *
+ * When using the library, you can know a story has ended by checking the current passage
+ * links array, if it is empty it means the current passage is the last one of that storyline.
+ *
  * @author Julio Foulquie
  * @version 0.1.0
  *
@@ -81,7 +84,22 @@ class TweeStory {
 	 * @author Julio Foulquie <jfoulquie@gmail.com>
 	 */
 	public function follow_link($next_passage) {
-		if(isset($this->passages[$next_passage])) {
+		// Check whether that's a valid next passage
+		$current = $this->get_current_passage();
+		$valid_link = FALSE;
+		if(is_array($current->links)) {
+			foreach($current->links AS $link){
+				if($link['link'] == $next_passage) {
+					$valid_link = TRUE;
+				}
+			}
+		} else {
+			var_dump($next_passage);
+			var_dump($current);
+			exit;
+		}
+
+		if($valid_link && isset($this->passages[$next_passage])) {
 			$this->current_passage = $next_passage;
 			return $this->get_current_passage();
 		}
