@@ -29,9 +29,15 @@ class TweeStory {
 	private $scripts;
 	private $stylesheets;
 
+	private $prev_passage;
 	private $current_passage;
 
+	private $max_history_size;
+	private $history;
+
 	public function __construct($file_path) {
+
+		$this->max_history_size = 50;
 
 		// Set up the logging
 		$min_log_level = Logger::DEBUG;
@@ -60,6 +66,7 @@ class TweeStory {
 			$this->log->addError("$file_path is NOT a file.");
 			throw new \Exception("Arg is not a file");
 		}
+		$this->prev_passage = FALSE;
 	}
 
 	/**
@@ -77,6 +84,31 @@ class TweeStory {
 	 */
 	public function get_current_passage() {
 		return $this->passages[$this->current_passage];
+	}
+
+	/**
+	 * Go back on the history of the current user, meaning you could go back and forth
+	 * if that's what the user did.
+	 * NOTE: Not to confuse with the 'story_back()'
+	 *
+	 * @param void
+	 *
+	 * @return TweePassage|Bool
+	 *
+	 * @author Julio Foulquie <jfoulquie@gmail.com>
+	 */
+	public function historic_back() {
+		end($this->history);
+		$index = prev($this->history);
+		if(!empty($index)) {
+			$this->current_passage = $index;
+			return $this->get_current_passage();
+		}
+		return FALSE;
+	}
+
+	public function story_back() {
+
 	}
 
 	/**
@@ -105,7 +137,9 @@ class TweeStory {
 		}
 
 		if($valid_link && isset($this->passages[$next_passage])) {
+			$this->prev_passage = $this->current_passage;
 			$this->current_passage = $next_passage;
+			$this->history[] = $this->current_passage;
 			return $this->get_current_passage();
 		}
 		$this->log->addWarning("Trying to follow a dead link.");
@@ -147,6 +181,7 @@ class TweeStory {
 						
                         if(in_array('start', $passage->tags)) {
 							$this->current_passage = $passage->title;
+							$this->history[] = $this->current_passage;
 						}
 					} catch(Exception $e) {
 						$this->log->addWarning($e->getMessage());
