@@ -34,9 +34,11 @@ class TweeStory {
 
 	private $max_history_size;
 	private $history;
+	private $history_offset;
 
 	public function __construct($file_path) {
 
+		$this->history_offset = 0;
 		$this->max_history_size = 50;
 
 		// Set up the logging
@@ -44,7 +46,7 @@ class TweeStory {
 		$this->log = new Logger('twee-parser');
 		if(PHP_SAPI == 'cli') {
 			$this->log->pushHandler(new StreamHandler("php://stdout", $min_log_level));
-		} 
+		}
 //        else {
 // 			$this->log->pushHandler(new StreamHandler(dirname(__DIR__) . '/data/logs/last-stream.log', $min_log_level));
 //		}
@@ -83,13 +85,13 @@ class TweeStory {
 	 * @author Julio Foulquie <jfoulquie@gmail.com>
 	 */
 	public function get_current_passage() {
+		var_dump('current: ' . $this->current_passage);
 		return $this->passages[$this->current_passage];
 	}
 
 	/**
-	 * Go back on the history of the current user, meaning you could go back and forth
-	 * if that's what the user did.
-	 * NOTE: Not to confuse with the 'story_back()'
+	 * Undo the last action from the user. You can use this function
+	 * to browse back the actions of the user.
 	 *
 	 * @param void
 	 *
@@ -97,18 +99,43 @@ class TweeStory {
 	 *
 	 * @author Julio Foulquie <jfoulquie@gmail.com>
 	 */
-	public function historic_back() {
+	public function undo() {
 		end($this->history);
+		for($i=0; $i<$this->history_offset; $i++){
+			prev($this->history);
+		}
 		$index = prev($this->history);
 		if(!empty($index)) {
+			$this->history_offset++;
+			///TODO: Update storyline
 			$this->current_passage = $index;
 			return $this->get_current_passage();
 		}
 		return FALSE;
 	}
 
-	public function story_back() {
-
+	/**
+	 * Redo the last undo from the user. You can use this function
+	 * to browse forward all the undos of the user.
+	 *
+	 * @param void
+	 *
+	 * @return TweePassage|Bool
+	 *
+	 * @author Julio Foulquie <jfoulquie@gmail.com>
+	 */
+	public function redo() {
+		end($this->history);
+		for($i=0; $i<$this->history_offset-1; $i++){
+			prev($this->history);
+		}
+		$index = current($this->history);
+		if(!empty($index)) {
+			$this->history_offset--;
+			///TODO: Update storyline
+			$this->current_passage = $index;
+		}
+		return $this->get_current_passage();
 	}
 
 	/**
@@ -130,16 +157,19 @@ class TweeStory {
 					$valid_link = TRUE;
 				}
 			}
-		} else {
-			var_dump($next_passage);
-			var_dump($current);
-			exit;
 		}
 
 		if($valid_link && isset($this->passages[$next_passage])) {
 			$this->prev_passage = $this->current_passage;
 			$this->current_passage = $next_passage;
 			$this->history[] = $this->current_passage;
+			///TODO: Update storyline
+
+			// Reset the redo history
+			if($this->history_offset != 0) {
+				$this->history = array_slice($this->history, 0, (-1*$this->history_offset));
+				$this->history_offset = 0;
+			}
 			return $this->get_current_passage();
 		}
 		$this->log->addWarning("Trying to follow a dead link.");
@@ -178,7 +208,7 @@ class TweeStory {
 					try {
 						$passage = new TweePassage($entity, $this->log);
 						$this->passages[$passage->title] = $passage;
-						
+                        // Set the start passage
                         if(in_array('start', $passage->tags)) {
 							$this->current_passage = $passage->title;
 							$this->history[] = $this->current_passage;
