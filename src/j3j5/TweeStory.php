@@ -62,6 +62,10 @@ class TweeStory {
 	}
 
 	/**
+	 * NAVIGATION
+	 */
+
+	/**
 	 * Get the current position on the story
 	 *
 	 * @param void
@@ -106,6 +110,9 @@ class TweeStory {
 		$this->log->addWarning("Trying to follow a dead link.");
 	}
 
+	/**
+	 * Internal functions
+	 */
 
 	/**
 	 * Process the JSON exported from Twee and create the story object
