@@ -85,7 +85,7 @@ class TweeStory {
 	 * @author Julio Foulquie <jfoulquie@gmail.com>
 	 */
 	public function get_current_passage() {
-		var_dump('current: ' . $this->current_passage);
+		$this->log->addDebug('Current passage--> ' . $this->current_passage);
 		return $this->passages[$this->current_passage];
 	}
 
@@ -125,6 +125,9 @@ class TweeStory {
 	 * @author Julio Foulquie <jfoulquie@gmail.com>
 	 */
 	public function redo() {
+		if($this->history_offset == 0) {
+			$this->log->addInfo("There are no actions to redo.");
+		}
 		end($this->history);
 		for($i=0; $i<$this->history_offset-1; $i++){
 			prev($this->history);
@@ -167,7 +170,7 @@ class TweeStory {
 
 			// Reset the redo history
 			if($this->history_offset != 0) {
-				$this->history = array_slice($this->history, 0, (-1*$this->history_offset));
+				$this->history = array_slice($this->history, 0, -$this->history_offset);
 				$this->history_offset = 0;
 			}
 			return $this->get_current_passage();
