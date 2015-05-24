@@ -1,14 +1,14 @@
 <?php
 
 /**
- * TweeParser
+ * TweeParser ✍
  *
  * A parser for JSON Twee files to create a meaningful object oriented approach.
  *
  * When using the library, you can know a story has ended by checking the current passage
  * links array, if it is empty it means the current passage is the last one of that storyline.
  *
- * @author Julio Foulquie
+ * @author Julio ⚓. Foulquie
  * @version 0.1.0
  *
  * 09 May 2015
@@ -29,12 +29,13 @@ class TweeStory {
 	private $scripts;
 	private $stylesheets;
 
-	private $prev_passage;
 	private $current_passage;
 
 	private $max_history_size;
 	private $history;
 	private $history_offset;
+
+	private $storyline;
 
 	public function __construct($file_path) {
 
@@ -68,11 +69,12 @@ class TweeStory {
 			$this->log->addError("$file_path is NOT a file.");
 			throw new \Exception("Arg is not a file");
 		}
-		$this->prev_passage = FALSE;
 	}
 
 	/**
-	 * NAVIGATION
+	 * 				⎈⎈⎈⎈⎈⎈⎈⎈⎈⎈
+	 * 				    NAVIGATION
+	 * 				⎈⎈⎈⎈⎈⎈⎈⎈⎈⎈
 	 */
 
 	/**
@@ -106,9 +108,9 @@ class TweeStory {
 		}
 		$index = prev($this->history);
 		if(!empty($index)) {
-			$this->history_offset++;
-			///TODO: Update storyline
 			$this->current_passage = $index;
+			$this->history_offset++;
+			$this->storyline = array_slice($this->storyline, 0, -1);
 			return $this->get_current_passage();
 		}
 		return FALSE;
@@ -134,9 +136,9 @@ class TweeStory {
 		}
 		$index = current($this->history);
 		if(!empty($index)) {
-			$this->history_offset--;
-			///TODO: Update storyline
 			$this->current_passage = $index;
+			$this->history_offset--;
+			$this->storyline[] = $this->current_passage;
 		}
 		return $this->get_current_passage();
 	}
@@ -163,10 +165,9 @@ class TweeStory {
 		}
 
 		if($valid_link && isset($this->passages[$next_passage])) {
-			$this->prev_passage = $this->current_passage;
 			$this->current_passage = $next_passage;
 			$this->history[] = $this->current_passage;
-			///TODO: Update storyline
+			$this->storyline[] = $this->current_passage;
 
 			// Reset the redo history
 			if($this->history_offset != 0) {
@@ -179,7 +180,9 @@ class TweeStory {
 	}
 
 	/**
-	 * Internal functions
+	 * 				☣☣☣☣☣☣☣☣☣☣☣☣
+	 * 				Internal functions
+	 * 				☣☣☣☣☣☣☣☣☣☣☣☣
 	 */
 
 	/**
@@ -215,6 +218,7 @@ class TweeStory {
                         if(in_array('start', $passage->tags)) {
 							$this->current_passage = $passage->title;
 							$this->history[] = $this->current_passage;
+							$this->storyline[] = $this->current_passage;
 						}
 					} catch(Exception $e) {
 						$this->log->addWarning($e->getMessage());
@@ -283,6 +287,5 @@ class TweeStory {
 		// Let's assume if the title isn't on the list, the entity is a passage
 		return 'passage';
 	}
-
 
 }
