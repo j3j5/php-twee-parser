@@ -1,0 +1,80 @@
+{
+    "data": [{
+        "tags": [],
+        "text": "",
+        "created": "201505241422",
+        "modified": "201505241422",
+        "title": "",
+        "modifier": "twee"
+    }, {
+        "tags": [],
+        "text": "\u00bfQuieres que las personas (f\u00edsicas o jur\u00eddicas) con m\u00e1s dinero sean las \u00fanicas capaces de tener acceso a la Justicia?\n\n[[#SI->VotaDerecha]]\n\n[[#NO->Pregunta4]]",
+        "created": "201505241422",
+        "modified": "201505241422",
+        "title": "Pregunta3",
+        "modifier": "twee"
+    }, {
+        "tags": [],
+        "text": "\u00bfTe gustar\u00eda tener que pagar (otra vez) por ir al hospital cada vez que a t\u00ed o a los tuyos les pase algo?\n\n[[#SI->VotaDerecha]]\n\n[[#NO->Pregunta3]]",
+        "created": "201505241422",
+        "modified": "201505241422",
+        "title": "Pregunta2",
+        "modifier": "twee"
+    }, {
+        "tags": [],
+        "text": "\u00bfTe gusta que te roben el dinero de tus impuestos en la cara?\n\n[[#SI->VotaDerecha]]\n\n[[#NO->Pregunta2]]",
+        "created": "201505241422",
+        "modified": "201505241422",
+        "title": "Pregunta1",
+        "modifier": "twee"
+    }, {
+        "tags": [],
+        "text": "Double-click this passage to edit it.",
+        "created": "201505241422",
+        "modified": "201505241422",
+        "title": "VotaDerecha",
+        "modifier": "twee"
+    }, {
+        "tags": [],
+        "text": "\u00bfTe gustar\u00eda que la educaci\u00f3n de los m\u00e1s peque\u00f1os dependa \u00fanicamente de cu\u00e1ntos recursos tengan sus padres?\n\n[[#SI->VotaDerecha]]\n\n[[#NO->Fin]]",
+        "created": "201505241422",
+        "modified": "201505241422",
+        "title": "Pregunta4",
+        "modifier": "twee"
+    }, {
+        "tags": ["stylesheet"],
+        "text": "",
+        "created": "201505241422",
+        "modified": "201505241422",
+        "title": "UserStylesheet",
+        "modifier": "twee"
+    }, {
+        "tags": ["script"],
+        "text": "",
+        "created": "201505241422",
+        "modified": "201505241422",
+        "title": "UserScript",
+        "modifier": "twee"
+    }, {
+        "tags": ["start"],
+        "text": "\u00bfEst\u00e1s indeciso y no sabes a qui\u00e9n votar? Sigue nuestro peque\u00f1o test...\n\n[[#Empezar->Pregunta1]]",
+        "created": "201505241422",
+        "modified": "201505241422",
+        "title": "Inicio",
+        "modifier": "twee"
+    }, {
+        "tags": [],
+        "text": "\u00bfA qui\u00e9n voto?",
+        "created": "201505241422",
+        "modified": "201505241422",
+        "title": "StoryTitle",
+        "modifier": "twee"
+    }, {
+        "tags": [],
+        "text": "Entonces pi\u00e9nsatelo dos veces y #NoLesVotes.\n\n- PP\n- PSOE\n- Ciutadans\n- CiU\n- PNV\n\n#SonLaMierda",
+        "created": "201505241422",
+        "modified": "201505241422",
+        "title": "Fin",
+        "modifier": "twee"
+    }]
+}
