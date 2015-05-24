@@ -52,7 +52,8 @@ class TweePassage {
 		$this->links		= array();
 		$this->raw_links	= array();
 		$this->parse_links($passage['text']);
-		// Clean up links from the text
+
+        // Clean up links from the text
 		foreach($this->raw_links AS $link) {
 			$passage['text'] = str_replace($link, '', $passage['text']);
 		}

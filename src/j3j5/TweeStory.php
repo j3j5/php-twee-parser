@@ -38,9 +38,10 @@ class TweeStory {
 		$this->log = new Logger('twee-parser');
 		if(PHP_SAPI == 'cli') {
 			$this->log->pushHandler(new StreamHandler("php://stdout", $min_log_level));
-		} else {
+		} 
+//        else {
 // 			$this->log->pushHandler(new StreamHandler(dirname(__DIR__) . '/data/logs/last-stream.log', $min_log_level));
-		}
+//		}
 
 		// Read and process the given file
 		if(is_file($file_path)) {
@@ -143,7 +144,8 @@ class TweeStory {
 					try {
 						$passage = new TweePassage($entity, $this->log);
 						$this->passages[$passage->title] = $passage;
-						if(empty($this->current_passage)) {
+						
+                        if(in_array('start', $passage->tags)) {
 							$this->current_passage = $passage->title;
 						}
 					} catch(Exception $e) {
