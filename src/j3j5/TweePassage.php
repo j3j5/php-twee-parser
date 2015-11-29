@@ -1,17 +1,15 @@
-<?php
+<?php namespace j3j5;
 
 /**
  * TweePassage
  *
  * An object to represent the Twee entity (passage).
  *
- * @author Julio Foulquié
+ * @author Julio ⚓. Foulquié
  * @version 0.1.0
  *
  * 09 May 2015
  */
-
-namespace j3j5;
 
 class TweePassage
 {
@@ -45,21 +43,27 @@ class TweePassage
     private function parsePassage($passage)
     {
         $this->title        = $passage['title'];
-        $this->modifier        = $passage['modifier'];
-        $this->tags            = $passage['tags'];
-        $this->created        = $passage['created'];
-        $this->modified        = $passage['modified'];
-        $this->links        = array();
-        $this->raw_links    = array();
+        $this->modifier     = $passage['modifier'];
+        $this->tags         = $passage['tags'];
+        $this->created      = $passage['created'];
+        $this->modified     = $passage['modified'];
+        $this->links        = [];
+        $this->raw_links    = [];
         $this->parseLinks($passage['text']);
 
         // Clean up links from the text
         foreach ($this->raw_links as $link) {
             $passage['text'] = str_replace($link, '', $passage['text']);
         }
-        $this->text        = $passage['text'];
+        $this->text = $passage['text'];
     }
 
+    /**
+     * Parse all links for the given text passage based on the pattern for Twee
+     *
+     * @param string $text
+     *
+     */
     private function parseLinks($text)
     {
         $offset = 0;
