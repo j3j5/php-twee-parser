@@ -38,10 +38,10 @@ class TweeStory
         $this->max_history_size = 50;
 
         // Read and process the given file
-        if (is_file($file_path)) {
+        if (is_file($file_path) && is_readable($file_path)) {
             $json = file_get_contents($file_path);
             if (!empty($json) && is_string($json)) {
-                $result = $this->process_json($json);
+                $result = $this->processJson($json);
                 if (empty($result)) {
                     throw new \Exception("Error processing");
                 }
@@ -49,7 +49,7 @@ class TweeStory
                 throw new \Exception("Error reading");
             }
         } else {
-            throw new \Exception("Arg is not a file");
+            throw new \Exception("$file_path is not a file or is not readable.");
         }
     }
 
@@ -68,7 +68,7 @@ class TweeStory
      *
      * @author Julio Foulquie <jfoulquie@gmail.com>
      */
-    public function get_current_passage()
+    public function getCurrentPassage()
     {
         return $this->passages[$this->current_passage];
     }
@@ -94,7 +94,7 @@ class TweeStory
             $this->current_passage = $index;
             $this->history_offset++;
             $this->storyline = array_slice($this->storyline, 0, -1);
-            return $this->get_current_passage();
+            return $this->getCurrentPassage();
         }
         return false;
     }
@@ -121,7 +121,7 @@ class TweeStory
             $this->history_offset--;
             $this->storyline[] = $this->current_passage;
         }
-        return $this->get_current_passage();
+        return $this->getCurrentPassage();
     }
 
     /**
@@ -133,10 +133,10 @@ class TweeStory
      *
      * @author Julio Foulquie <jfoulquie@gmail.com>
      */
-    public function follow_link($next_passage)
+    public function followLink($next_passage)
     {
         // Check whether that's a valid next passage
-        $current = $this->get_current_passage();
+        $current = $this->getCurrentPassage();
         $valid_link = false;
         if (is_array($current->links)) {
             foreach ($current->links as $link) {
@@ -156,7 +156,7 @@ class TweeStory
                 $this->history = array_slice($this->history, 0, -$this->history_offset);
                 $this->history_offset = 0;
             }
-            return $this->get_current_passage();
+            return $this->getCurrentPassage();
         }
     }
 
@@ -175,7 +175,7 @@ class TweeStory
      *
      * @author Julio Foulquie <jfoulquie@gmail.com>
      */
-    private function process_json($json)
+    private function processJson($json)
     {
         $twee_array = json_decode($json, true);
 
@@ -184,9 +184,9 @@ class TweeStory
         }
 
         foreach ($twee_array['data'] as $entity) {
-            $type = $this->get_type_from_tags($entity['tags']);
+            $type = $this->getTypeFromTags($entity['tags']);
             if (empty($type)) {
-                $type = $this->get_type_from_title($entity['title']);
+                $type = $this->getTypeFromTitle($entity['title']);
             }
             switch ($type) {
                 case 'passage':
@@ -209,7 +209,7 @@ class TweeStory
                     $this->stylesheets[] = $entity['text'];
                     break;
                 default:
-                    throw new \Exception("Unknown entity type!");
+                    throw new \RuntimeException("Unknown entity type!");
             }
         }
         return true;
@@ -224,7 +224,7 @@ class TweeStory
      *
      * @author Julio Foulquie <jfoulquie@gmail.com>
      */
-    private function get_type_from_tags($tags)
+    private function getTypeFromTags($tags)
     {
         $tag_types = array('stylesheet', 'script');
 
@@ -246,7 +246,7 @@ class TweeStory
      *
      * @author Julio Foulquie <jfoulquie@gmail.com>
      */
-    private function get_type_from_title($title)
+    private function getTypeFromTitle($title)
     {
         $title_types = array(
             'stylesheet'    => 'UserStylesheet',

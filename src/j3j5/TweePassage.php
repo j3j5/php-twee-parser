@@ -39,10 +39,10 @@ class TweePassage
             throw new \Exception("Wrong entity");
         }
 
-        $this->parse_passage($passage);
+        $this->parsePassage($passage);
     }
 
-    private function parse_passage($passage)
+    private function parsePassage($passage)
     {
         $this->title        = $passage['title'];
         $this->modifier        = $passage['modifier'];
@@ -51,7 +51,7 @@ class TweePassage
         $this->modified        = $passage['modified'];
         $this->links        = array();
         $this->raw_links    = array();
-        $this->parse_links($passage['text']);
+        $this->parseLinks($passage['text']);
 
         // Clean up links from the text
         foreach ($this->raw_links as $link) {
@@ -60,7 +60,7 @@ class TweePassage
         $this->text        = $passage['text'];
     }
 
-    private function parse_links($text)
+    private function parseLinks($text)
     {
         $offset = 0;
         $matches = array();
