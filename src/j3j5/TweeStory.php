@@ -167,6 +167,24 @@ class TweeStory
     }
 
     /**
+     * Move the story to a given passage, specially useful to start from the given point.
+     *
+     * @param string $passage
+     *
+     * @return bool|TweePassage
+     */
+    public function moveTo($passage)
+    {
+        if (isset($this->passages[$passage])) {
+            $this->current_passage = $passage;
+            $this->history[] = $this->current_passage;
+            $this->storyline[] = $this->current_passage;
+            return $this->getCurrentPassage();
+        }
+        return false;
+    }
+
+    /**
      *              ☣☣☣☣☣☣☣☣☣☣☣☣
      *              Internal functions
      *              ☣☣☣☣☣☣☣☣☣☣☣☣
