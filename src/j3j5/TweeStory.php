@@ -26,30 +26,36 @@ class TweeStory
 
     private $current_passage;
 
+    /**
+     *
+     */
     private $max_history_size;
+
+    /**
+     *
+     */
     private $history;
+
+    /**
+     *
+     */
     private $history_offset;
 
+    /**
+     *
+     */
     private $storyline;
 
-    public function __construct($file_path)
+    public function __construct($json)
     {
         $this->history_offset = 0;
         $this->max_history_size = 50;
 
-        // Read and process the given file
-        if (is_file($file_path) && is_readable($file_path)) {
-            $json = file_get_contents($file_path);
-            if (!empty($json) && is_string($json)) {
-                $result = $this->processJson($json);
-                if (empty($result)) {
-                    throw new \Exception("Error processing");
-                }
-            } else {
-                throw new \Exception("Error reading");
+        if (!empty($json) && is_string($json)) {
+            $result = $this->processJson($json);
+            if (empty($result)) {
+                throw new \Exception("Error processing");
             }
-        } else {
-            throw new \Exception("$file_path is not a file or is not readable.");
         }
     }
 
