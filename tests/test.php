@@ -10,14 +10,15 @@ use j3j5\TweePassage;
     $log = '';
 	$file = __DIR__ . "/aquienvoto.json";
 	try {
-		$story = new TweeStory($file);
+		$json = file_get_contents($file);
+		$story = new TweeStory($json);
 	} catch(Exception $e) {
 		var_dump($e->getMessage());
 		exit;
 	}
 
 	$current = FALSE;
-	while($current = $story->get_current_passage()) {
+	while($current = $story->getCurrentPassage()) {
 		echo $current->text . PHP_EOL;
 		if(!empty($current->links) && is_array($current->links)) {
 			echo 'You can do:'.PHP_EOL;
@@ -30,7 +31,7 @@ use j3j5\TweePassage;
             echo $log;
 			$next = search_link($text_next);
 			if(!empty($next)) {
-				$story->follow_link($next);
+				$story->followLink($next);
 			}
 		} else {
 			break;
