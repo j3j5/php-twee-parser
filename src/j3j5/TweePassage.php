@@ -42,7 +42,7 @@ class TweePassage
 
     private function parsePassage($passage)
     {
-        $this->title        = $passage['title'];
+        $this->title        = trim($passage['title']);
         $this->modifier     = $passage['modifier'];
         $this->tags         = $passage['tags'];
         $this->created      = $passage['created'];
@@ -72,12 +72,12 @@ class TweePassage
         while (preg_match($this->links_pattern, $text, $matches, 0, $offset)) {
             switch ($matches[2]) {
                 case '->':
-                    $this->links[] = array('text' => $matches[1], 'link' => $matches[3]);
+                    $this->links[] = array('text' => trim($matches[1]), 'link' => trim($matches[3]));
                     $this->raw_links[] = $matches[0];
                     break;
                 case '<-':
                 case '|':
-                    $this->links[] = array('text' => $matches[3], 'link' => $matches[1]);
+                    $this->links[] = array('text' => trim($matches[3]), 'link' => trim($matches[1]));
                     $this->raw_links[] = $matches[0];
                     break;
                 default:
